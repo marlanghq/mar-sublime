@@ -65,7 +65,13 @@
       "trigger": "auth",
       "annotation": "Auth block",
       "kind": "snippet",
-      "contents": "auth {\n  code_ttl_minutes ${1:10}\n  session_ttl_hours ${2:24}\n  email_transport ${3:console}\n  email_from \"${4:no-reply@example.local}\"\n  email_subject \"${5:Your login code}\"\n}"
+      "contents": "auth {\n  code_ttl_minutes ${1:10}\n  session_ttl_hours ${2:24}\n  email_from \"${3:no-reply@example.local}\"\n  email_subject \"${4:Your login code}\"\n}"
+    },
+    {
+      "trigger": "ios",
+      "annotation": "iOS block",
+      "kind": "snippet",
+      "contents": "ios {\n  bundle_identifier \"${1:com.example.app}\"\n  display_name \"${2:My App}\"\n  server_url \"${3:https://example.com}\"\n}"
     },
     {
       "trigger": "public",
