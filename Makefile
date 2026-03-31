@@ -7,11 +7,15 @@ OUT := $(DIST_DIR)/$(PACKAGE_NAME)
 SUBLIME_INSTALLED_PACKAGES := $(HOME)/Library/Application Support/Sublime Text/Installed Packages
 
 define print_title
-	@sh -c 'printf "\n%s\n" "$(1)"'
+	@sh -c 'if [ -n "$$NO_COLOR" ] || ! [ -t 1 ]; then printf "\n%s\n" "$(1)"; else printf "\n\033[1;36m%s\033[0m\n" "$(1)"; fi'
 endef
 
 define print_info
 	@sh -c 'printf "  %s\n" "$(1)"'
+endef
+
+define print_ok
+	@sh -c 'if [ -n "$$NO_COLOR" ] || ! [ -t 1 ]; then printf "  %s\n" "$(1)"; else printf "  \033[1;32m%s\033[0m\n" "$(1)"; fi'
 endef
 
 check-zip:
@@ -28,8 +32,14 @@ package: check-zip
 	@mkdir -p "$(DIST_DIR)"
 	@rm -f "$(OUT)"
 	@zip -qr "$(OUT)" Mar.sublime-syntax Mar.sublime-completions README.md
-	$(call print_info,Output: $(OUT))
-	@printf '  %s\n' 'Install in Sublime Text on macOS with: cp $(OUT) "$$HOME/Library/Application Support/Sublime Text/Installed Packages/"'
+	@sh -c 'if [ -n "$$NO_COLOR" ] || ! [ -t 1 ]; then \
+		printf "  %s\n" "Output: $(OUT)"; \
+		printf "  %s\n" "Install in Sublime Text on macOS with: cp $(OUT) \"$$HOME/Library/Application Support/Sublime Text/Installed Packages/\""; \
+	else \
+		printf "  Output: \033[1;32m%s\033[0m\n" "$(OUT)"; \
+		printf "  Install in Sublime Text on macOS with: \033[1;32mcp %s \"$$HOME/Library/Application Support/Sublime Text/Installed Packages/\"\033[0m\n" "$(OUT)"; \
+	fi'
+	@printf "\n"
 
 install: package
 	$(call print_info,Installing in $(SUBLIME_INSTALLED_PACKAGES))
