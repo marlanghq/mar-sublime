@@ -31,7 +31,7 @@ package: check-zip
 	$(call print_info,Packaging Mar.sublime-package)
 	@mkdir -p "$(DIST_DIR)"
 	@rm -f "$(OUT)"
-	@zip -qr "$(OUT)" Mar.sublime-syntax Mar.sublime-completions README.md
+	@zip -qr "$(OUT)" Mar.sublime-syntax Mar.sublime-completions
 	@sh -c 'if [ -n "$$NO_COLOR" ] || ! [ -t 1 ]; then \
 		printf "  %s\n" "Output: $(OUT)"; \
 		printf "  %s\n" "Install in Sublime Text on macOS with: cp $(OUT) \"$$HOME/Library/Application Support/Sublime Text/Installed Packages/\""; \

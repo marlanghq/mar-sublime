@@ -5,13 +5,13 @@
       "trigger": "app",
       "annotation": "Mar app scaffold",
       "kind": "snippet",
-      "contents": "app ${1:MyApi}\nport ${2:4100}\ndatabase \"${3:app.db}\"\n\nentity ${4:Todo} {\n  ${5:title}: String\n  authorize all when ${6:user_authenticated}\n}"
+      "contents": "app ${1:MyApi}\nport ${2:4100}\ndatabase \"${3:app.db}\"\n\nentity ${4:Todo} {\n  ${5:title}: String\n  authorize read, create, update, delete when ${6:user_authenticated}\n}"
     },
     {
       "trigger": "entity",
       "annotation": "Entity block",
       "kind": "snippet",
-      "contents": "entity ${1:EntityName} {\n  ${2:name}: ${3:String}\n  authorize all when ${4:user_authenticated}\n}"
+      "contents": "entity ${1:EntityName} {\n  ${2:name}: ${3:String}\n  authorize read, create, update, delete when ${4:user_authenticated}\n}"
     },
     {
       "trigger": "field",
@@ -59,13 +59,13 @@
       "trigger": "authorize",
       "annotation": "Authorize rule",
       "kind": "snippet",
-      "contents": "authorize ${1:read} when ${2:user_authenticated}"
+      "contents": "authorize ${1:read}, ${2:create}, ${3:update}, ${4:delete} when ${5:user_authenticated}"
     },
     {
       "trigger": "auth",
       "annotation": "Auth block",
       "kind": "snippet",
-      "contents": "auth {\n  code_ttl_minutes ${1:10}\n  session_ttl_hours ${2:24}\n  email_from \"${3:no-reply@example.local}\"\n  email_subject \"${4:Your login code}\"\n}"
+      "contents": "auth {\n  code_ttl_minutes ${1:10}\n  session_ttl_hours ${2:24}\n  auth_request_code_rate_limit_per_minute ${3:5}\n  auth_login_rate_limit_per_minute ${4:10}\n  admin_ui_session_ttl_hours ${5:2}\n  security_frame_policy ${6:sameorigin}\n  security_referrer_policy ${7:strict-origin-when-cross-origin}\n  security_content_type_nosniff ${8:true}\n  email_from \"${9:no-reply@mar.local}\"\n  email_subject \"${10:Your Mar login code}\"\n  smtp_host \"${11:smtp.example.com}\"\n  smtp_port ${12:587}\n  smtp_username \"${13:apikey}\"\n  smtp_password_env \"${14:SMTP_PASSWORD}\"\n  smtp_starttls ${15:true}\n}"
     },
     {
       "trigger": "ios",
@@ -83,25 +83,67 @@
       "trigger": "system",
       "annotation": "System block",
       "kind": "snippet",
-      "contents": "system {\n  request_logs_buffer ${1:200}\n  http_max_request_body_mb ${2:1}\n  sqlite_journal_mode ${3:wal}\n  sqlite_foreign_keys ${4:true}\n}"
+      "contents": "system {\n  request_logs_buffer ${1:200}\n  http_max_request_body_mb ${2:1}\n  sqlite_journal_mode ${3:wal}\n  sqlite_synchronous ${4:normal}\n  sqlite_foreign_keys ${5:true}\n  sqlite_busy_timeout_ms ${6:5000}\n  sqlite_wal_autocheckpoint ${7:1000}\n  sqlite_journal_size_limit_mb ${8:64}\n  sqlite_mmap_size_mb ${9:128}\n  sqlite_cache_size_kb ${10:2000}\n}"
     },
     {
       "trigger": "typealias",
       "annotation": "Type alias",
       "kind": "snippet",
-      "contents": "type alias ${1:CreateInput} =\n  { ${2:name} : ${3:String}\n  }"
+      "contents": "type alias ${1:CreateOrderInput} =\n  { ${2:userId} : ref ${3:User}\n  , ${4:total} : ${5:Float}\n  }"
+    },
+    {
+      "trigger": "type",
+      "annotation": "Closed type",
+      "kind": "snippet",
+      "contents": "type ${1:UserRole} {\n  ${2:Admin}\n  ${3:Member}\n}"
     },
     {
       "trigger": "action",
       "annotation": "Action block",
       "kind": "snippet",
-      "contents": "action ${1:doSomething} {\n  input: ${2:InputAlias}\n\n  ${3:result} = create ${4:Todo} {\n    ${5:title}: input.${6:title}\n  }\n}"
+      "contents": "action ${1:placeOrder} {\n  input: ${2:PlaceOrderInput}\n\n  ${3:item} = load ${4:Inventory} {\n    ${5:id}: input.${6:itemId}\n  }\n\n  rule \"${7:Item must be available}\" expect ${8:item.stock > 0}\n\n  ${9:order} = create ${10:Order} {\n    ${11:userId}: input.${12:userId}\n  }\n}"
+    },
+    {
+      "trigger": "actionrule",
+      "annotation": "Action rule",
+      "kind": "snippet",
+      "contents": "rule \"${1:Business rule failed}\" expect ${2:condition}"
     },
     {
       "trigger": "authzcrud",
       "annotation": "CRUD auth pack",
       "kind": "snippet",
-      "contents": "authorize all when ${1:user_authenticated}\nauthorize read when ${2:user_authenticated and (id == user_id or user_role == \"admin\")}\nauthorize delete when ${3:user_role == \"admin\"}"
+      "contents": "authorize read, create, update, delete when ${1:user_authenticated}\nauthorize read when ${2:user_authenticated and (id == user_id or user_role == \"admin\")}\nauthorize delete when ${3:user_role == \"admin\"}"
+    },
+    {
+      "trigger": "load",
+      "annotation": "Load step",
+      "kind": "snippet",
+      "contents": "${1:todo} = load ${2:Todo} {\n  ${3:id}: input.${4:id}\n}"
+    },
+    {
+      "trigger": "create",
+      "annotation": "Create step",
+      "kind": "snippet",
+      "contents": "${1:order} = create ${2:Order} {\n  ${3:userId}: input.${4:userId}\n}"
+    },
+    {
+      "trigger": "update",
+      "annotation": "Update step",
+      "kind": "snippet",
+      "contents": "${1:updatedOrder} = update ${2:Order} {\n  ${3:id}: input.${4:id}\n  ${5:status}: ${6:\"confirmed\"}\n}"
+    },
+    {
+      "trigger": "delete",
+      "annotation": "Delete step",
+      "kind": "snippet",
+      "contents": "${1:deletedOrder} = delete ${2:Order} {\n  ${3:id}: input.${4:id}\n}"
+    },
+    {
+      "trigger": "actioncreate",
+      "annotation": "Multi-create action",
+      "kind": "snippet",
+      "contents": "action ${1:placeOrder} {\n  input: ${2:PlaceOrderInput}\n\n  ${3:order} = create ${4:Order} {\n    ${5:userId}: input.${6:userId}\n    ${7:total}: input.${8:total}\n  }\n\n  ${9:auditLog} = create ${10:AuditLog} {\n    ${11:userId}: input.${6:userId}\n    ${12:event}: \"order created\"\n  }\n\n  ${13:updatedInventory} = update ${14:Inventory} {\n    ${15:id}: input.${16:inventoryId}\n    ${17:stock}: input.${18:remainingStock}\n  }\n}"
     }
   ]
 }
