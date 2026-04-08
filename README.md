@@ -11,7 +11,7 @@ This package adds syntax highlighting and snippet completions for `.mar` files i
 
 ## Installation
 
-Install `Mar Developer Tools` via Package Control.
+Install `Mar` via Package Control.
 
 ## Usage
 
