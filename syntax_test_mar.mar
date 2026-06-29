@@ -1,0 +1,80 @@
+-- SYNTAX TEST "Mar.sublime-syntax"
+
+-- This file is run by `subl --command "run_syntax_tests"` and by the
+-- Package Control CI. Each `^` line asserts the scope of the chars
+-- above it. Keep it in sync with Mar.sublime-syntax.
+
+module Main exposing (main)
+-- <- keyword.other.module.mar
+--     ^^^^ entity.name.namespace.mar
+--                ^^^^^^^^ keyword.other.module.mar
+
+
+import UI exposing (text, button)
+-- <- keyword.other.module.mar
+--     ^^ entity.name.namespace.mar
+--        ^^^^^^^^ keyword.other.module.mar
+
+
+type alias Model =
+-- <- keyword.declaration.type.mar
+--   ^^^^^ keyword.declaration.type.mar
+--         ^^^^^ entity.name.type.mar
+
+
+type Msg
+-- <- keyword.declaration.type.mar
+--   ^^^ entity.name.type.mar
+    = Increment
+--  ^ keyword.operator.alternative.mar
+--    ^^^^^^^^^ storage.type.mar
+    | Decrement
+--  ^ keyword.operator.alternative.mar
+
+
+count : Int
+-- <- entity.name.function.mar
+--    ^ keyword.operator.type-annotation.mar
+--      ^^^ storage.type.mar
+count = 42
+-- <- entity.name.function.mar
+--      ^^ constant.numeric.integer.mar
+
+
+greeting : String
+greeting = "hello"
+--         ^ punctuation.definition.string.begin.mar
+--          ^^^^^ string.quoted.double.mar
+
+
+update msg model =
+-- <- entity.name.function.mar
+    case msg of
+--  ^^^^ keyword.control.case.mar
+--           ^^ keyword.control.case.mar
+        Increment ->
+--                ^^ keyword.operator.arrow.mar
+            count + 1
+--                ^ keyword.operator.arithmetic.mar
+
+
+initial : Int
+initial =
+    let
+--  ^^^ keyword.declaration.binding.mar
+        x = 1
+    in
+--  ^^ keyword.declaration.binding.mar
+    x
+
+
+toMsg : Int -> Msg
+toMsg n =
+    if n > 0 then Increment else Decrement
+--  ^^ keyword.control.conditional.mar
+--           ^^^^ keyword.control.conditional.mar
+--                          ^^^^ keyword.control.conditional.mar
+
+
+-- {- block comment -}
+-- ^ comment.line.double-dash.mar

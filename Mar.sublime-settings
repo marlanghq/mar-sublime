@@ -1,0 +1,8 @@
+{
+  // Mar source is indented with spaces (4), matching `mar format`.
+  "tab_size": 4,
+  "translate_tabs_to_spaces": true,
+
+  // Line comments use `-- `; auto-continue them on Enter.
+  "comment_continuation": true
+}

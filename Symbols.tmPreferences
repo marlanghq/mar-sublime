@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Populates Goto Symbol (Cmd+R) and the project-wide Goto
+     Definition index with top-level function/value definitions and
+     type declarations. -->
+<plist version="1.0">
+<dict>
+  <key>scope</key>
+  <string>source.mar entity.name.function.mar, source.mar entity.name.type.mar</string>
+  <key>settings</key>
+  <dict>
+    <key>showInSymbolList</key>
+    <integer>1</integer>
+    <key>showInIndexedSymbolList</key>
+    <integer>1</integer>
+  </dict>
+</dict>
+</plist>
