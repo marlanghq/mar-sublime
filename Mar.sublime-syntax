@@ -29,6 +29,7 @@ contexts:
     - include: type_declarations
     - include: top_level_signatures
     - include: keywords
+    - include: bare_globals
     - include: literals
     - include: types_and_constructors
     - include: operators
@@ -94,8 +95,15 @@ contexts:
       scope: keyword.control.case.mar
     - match: '\b(let|in)\b'
       scope: keyword.declaration.binding.mar
-    - match: '\b(where|as)\b'
+    - match: '\b(where|as|port)\b'
       scope: keyword.other.mar
+
+  bare_globals:
+    # In scope everywhere, with no import and no module prefix. They have
+    # no qualified spelling (`Basics.not` does not compile), so without
+    # this they read as ordinary local names.
+    - match: '\b(always|linkTo|not|max|min|clamp|abs|modBy|remainderBy)\b'
+      scope: support.function.mar
 
   literals:
     - include: strings
@@ -148,8 +156,11 @@ contexts:
       pop: true
 
   numbers:
+    # Mar has two exact numeric types and no binary float. `19.99` is a
+    # Decimal literal (base-10, exact); `/` over two of them produces a
+    # Decimal.Division the caller resolves, and `//` is integer division.
     - match: '\b\d+\.\d+\b'
-      scope: constant.numeric.float.mar
+      scope: constant.numeric.decimal.mar
     - match: '\b\d+\b'
       scope: constant.numeric.integer.mar
 
@@ -175,7 +186,7 @@ contexts:
         2: variable.other.member.mar
 
   operators:
-    - match: '->'
+    - match: '->|<-'
       scope: keyword.operator.arrow.mar
     - match: '\|>|<\|'
       scope: keyword.operator.pipe.mar
@@ -187,6 +198,10 @@ contexts:
       scope: keyword.operator.concat.mar
     - match: '::'
       scope: keyword.operator.cons.mar
+    # `//` (integer division) before the single-char class, so it reads as
+    # one operator instead of two slashes.
+    - match: '//'
+      scope: keyword.operator.arithmetic.mar
     - match: '[+\-*/]'
       scope: keyword.operator.arithmetic.mar
     - match: '='

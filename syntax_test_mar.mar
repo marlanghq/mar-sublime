@@ -41,6 +41,22 @@ count = 42
 --      ^^ constant.numeric.integer.mar
 
 
+price : Decimal
+price = 19.99
+--      ^^^^^ constant.numeric.decimal.mar
+
+
+half : Int
+half = 7 // 2
+--       ^^ keyword.operator.arithmetic.mar
+
+
+bounded : Int -> Int
+bounded n = clamp 0 10 (abs n)
+--          ^^^^^ support.function.mar
+--                      ^^^ support.function.mar
+
+
 greeting : String
 greeting = "hello"
 --         ^ punctuation.definition.string.begin.mar
